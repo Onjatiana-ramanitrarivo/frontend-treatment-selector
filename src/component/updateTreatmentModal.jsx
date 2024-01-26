@@ -5,15 +5,20 @@ function UpdateTreatmentModal({ treatmentSelected }) {
     const [treatmentTranslation, setTreatmentTranslation] = useState("")
     const [treatmentState, setTreatmentState] = useState(true)
 
-    const handleUpdate = () => {
+    const handleUpdate = async () => {
         try {
+
             const obj = {
-                "name": treatmentSelected.name,
-                "traduction": treatmentTranslation !== "" ? treatmentTranslation : treatmentSelected.traduction,
-                "state": treatmentState
+                "treatment":{
+                    "name":treatmentSelected.name,
+                    "translation":treatmentTranslation !== "" ? treatmentTranslation : treatmentSelected.translation,
+                    "state":true,
+                    "category_id":treatmentSelected.category_id
+                }
             }
 
-            treatmentService.update(treatmentSelected.id, obj)
+            await treatmentService.update(treatmentSelected.category_id,treatmentSelected.id,obj)
+
         } catch (error) {
             console.log("error : ", error)
         }

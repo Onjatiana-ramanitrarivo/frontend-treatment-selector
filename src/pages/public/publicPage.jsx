@@ -11,7 +11,7 @@ function PublicPage(){
     const [patientName, setPatientName] = useState("")
 
 
-    const loadCategoryDatas = () => {
+    const loadTreatmentDatas = () => {
 
         treatmentService.findAll()
         .then(res => {
@@ -22,7 +22,7 @@ function PublicPage(){
     }
 
     useEffect(() => {
-        loadCategoryDatas()
+        loadTreatmentDatas()
     }, [category])
 
     const treatmentLineObject = {
