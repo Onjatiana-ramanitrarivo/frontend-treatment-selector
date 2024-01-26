@@ -12,7 +12,7 @@ function UpdateTreatmentModal({ treatmentSelected }) {
                 "treatment":{
                     "name":treatmentSelected.name,
                     "translation":treatmentTranslation !== "" ? treatmentTranslation : treatmentSelected.translation,
-                    "state":true,
+                    "state":treatmentState,
                     "category_id":treatmentSelected.category_id
                 }
             }

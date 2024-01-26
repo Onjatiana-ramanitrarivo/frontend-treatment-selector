@@ -2,18 +2,23 @@ import { useState } from "react"
 import treatmentService from "../services/treatmentService"
 
 function NewTreatmentModal() {
-    const [newCategory, setNewCategory] = useState("1")
+    const [newCategory, setNewCategory] = useState("4")
     const [treatmentName, setTreatmentName] = useState("")
 
     const obj = {
-        "name": treatmentName,
-        "traduction": "",
-        "state": true
+        "treatment":{
+            "name":treatmentName,
+            "translation":"",
+            "state":true,
+            "category_id":newCategory
+        }
     }
 
-    const handleCreate = () => {
+
+    const handleCreate = async () => {
+
         try {
-            treatmentService.save(newCategory, obj)
+            await treatmentService.save(newCategory,obj)
         } catch (error) {
             console.log("error :", error)
         }
@@ -32,12 +37,12 @@ function NewTreatmentModal() {
                     <div>
                         <label className="form-label">Choose category</label>
                         <div className="form-check">
-                            <input className="form-check-input" type="radio" name="options" id="1" value="1" checked={newCategory === "1"} onChange={(e) => setNewCategory(e.target.value)} />
-                            <label className="form-check-label" htmlFor="1">Diagnostic</label>
+                            <input className="form-check-input" type="radio" name="options" id="4" value="4" checked={newCategory === "4"} onChange={(e) => setNewCategory(e.target.value)} />
+                            <label className="form-check-label" htmlFor="4">Diagnostic</label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="radio" name="options" id="2" value="2" checked={newCategory === "2"} onChange={(e) => setNewCategory(e.target.value)} />
-                            <label className="form-check-label" htmlFor="2">Examens</label>
+                            <input className="form-check-input" type="radio" name="options" id="5" value="5" checked={newCategory === "5"} onChange={(e) => setNewCategory(e.target.value)} />
+                            <label className="form-check-label" htmlFor="5">Examens</label>
                         </div>
                     </div>
                     <form>
