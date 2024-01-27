@@ -3,8 +3,11 @@ import UpdateTreatmentModal from "../../component/updateTreatmentModal"
 import NewTreatmentModal from "../../component/newTreatmentModal"
 import Navbar from "../../component/navbar"
 import treatmentService from "../../services/treatmentService"
+import categoryService from "../../services/categoryService"
 
 function TreatmentPage() {
+
+    const [categoryData, setCategoryData]= useState({})
     const [category, setCategory] = useState("4")
     const [treatmentDatas, setTreatmentDatas] = useState([])
     const [treatmentSelected, setTreatmentSelected] = useState({})
@@ -25,6 +28,12 @@ function TreatmentPage() {
             window.location.href = '/'
         } else {
             loadTreatmentDatas()
+
+            categoryService.findAll()
+            .then(res=> setCategoryData(res.data))
+            .catch(err=> console.log("err",err))
+
+
         }
     }, [category])
 
@@ -36,14 +45,17 @@ function TreatmentPage() {
             <div className="mb-4 treatment-header">
                 <div>
                     <label className="form-label">Filtered by category</label>
-                    <div className="form-check">
-                        <input className="form-check-input" type="radio" name="options" id="4" value="4" checked={category === "4"} onChange={(e) => setCategory(e.target.value)} />
-                        <label className="form-check-label" htmlFor="4">Diagnostic</label>
-                    </div>
-                    <div className="form-check">
-                        <input className="form-check-input" type="radio" name="options" id="5" value="5" checked={category === "5"} onChange={(e) => setCategory(e.target.value)} />
-                        <label className="form-check-label" htmlFor="5">Examens</label>
-                    </div>
+                    {
+                        Array.isArray(categoryData.categories) ? (
+                            categoryData.categories.map((category,index)=>(
+                                <div key={index} className="form-check">
+                                    <input className="form-check-input" type="radio" name="options" id={category.id} value={category.id} checked={category === category.id} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor={category.id}>{category.title}</label>
+                                </div>
+                            ))
+
+                        ) : ("")
+                    }
                 </div>
                 <div>
                     <button className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#newTreatmentModal">New</button>
