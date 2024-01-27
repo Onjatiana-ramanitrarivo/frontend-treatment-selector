@@ -1,9 +1,14 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import treatmentService from "../services/treatmentService"
+import categoryService from "../services/categoryService"
 
 function NewTreatmentModal() {
+
+    const [categoryData, setCategoryData]= useState({})
     const [newCategory, setNewCategory] = useState("4")
     const [treatmentName, setTreatmentName] = useState("")
+
+    console.log("categoryData ato am new ==",categoryData)
 
     const obj = {
         "treatment":{
@@ -25,6 +30,12 @@ function NewTreatmentModal() {
         window.location.reload()
     }
 
+    useEffect(()=>{
+        categoryService.findAll()
+        .then(res=> setCategoryData(res.data))
+        .catch(err=> console.log("err",err))
+    },[])
+
     return <div className="modal fade" id="newTreatmentModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
         <div className="modal-dialog">
@@ -36,14 +47,19 @@ function NewTreatmentModal() {
                 <div className="modal-body">
                     <div>
                         <label className="form-label">Choose category</label>
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="options" id="4" value="4" checked={newCategory === "4"} onChange={(e) => setNewCategory(e.target.value)} />
-                            <label className="form-check-label" htmlFor="4">Diagnostic</label>
-                        </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="options" id="5" value="5" checked={newCategory === "5"} onChange={(e) => setNewCategory(e.target.value)} />
-                            <label className="form-check-label" htmlFor="5">Examens</label>
-                        </div>
+
+                        {
+                            Array.isArray(categoryData.categories) ? (
+                                categoryData.categories.map((category,index)=>(
+                                    <div key={index} className="form-check">
+                                        <input className="form-check-input" type="radio" name="options" id={category.id} value={category.id} checked={category === category.id} onChange={(e) => setNewCategory(e.target.value)} />
+                                        <label className="form-check-label" htmlFor={category.id}>{category.title}</label>
+                                    </div>
+                                ))
+
+                            ) : ("")
+                        }
+
                     </div>
                     <form>
                         <div className="mb-3">

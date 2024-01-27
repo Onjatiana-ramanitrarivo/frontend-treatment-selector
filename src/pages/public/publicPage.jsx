@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react"
 import treatmentService from "../../services/treatmentService"
 import treatmentLineService from "../../services/treatmentLineService"
+import categoryService from "../../services/categoryService"
 
 function PublicPage(){
 
-    const [category, setCategory] = useState("4")
+
+    const [categoryData, setCategoryData]= useState({})
+    const [category, setCategory] = useState()
     const [treatmentDatas, setTreatmentDatas] = useState([])
     const [isTransleted, setIsTranslated] = useState(false)
     const [treatmentSelected, setTreatmentSelected] = useState()
     const [patientName, setPatientName] = useState("")
-
 
     const loadTreatmentDatas = () => {
 
@@ -23,6 +25,11 @@ function PublicPage(){
 
     useEffect(() => {
         loadTreatmentDatas()
+
+        categoryService.findAll()
+        .then(res=> setCategoryData(res.data))
+        .catch(err=> console.log("err",err))
+        
     }, [category])
 
     const treatmentLineObject = {
@@ -58,14 +65,18 @@ function PublicPage(){
         <div className="category-section">
             <div className="mb-4">
                 <label className="form-label">Choose a category</label>
-                <div className="form-check">
-                    <input className="form-check-input" type="radio" name="options" id="4" value="4" checked={category === "4"} onChange={(e) => setCategory(e.target.value)} />
-                    <label className="form-check-label" htmlFor="4">Diagnostic</label>
-                </div>
-                <div className="form-check">
-                    <input className="form-check-input" type="radio" name="options" id="5" value="5" checked={category === "5"} onChange={(e) => setCategory(e.target.value)} />
-                    <label className="form-check-label" htmlFor="5">Examens</label>
-                </div>
+                {
+                    Array.isArray(categoryData.categories) ? (
+                        categoryData.categories.map((category,index)=>(
+                            <div key={index} className="form-check">
+                                <input className="form-check-input" type="radio" name="options" id={category.id} value={category.id} checked={category === category.id} onChange={(e) => setCategory(e.target.value)} />
+                                <label className="form-check-label" htmlFor={category.id}>{category.title}</label>
+                            </div>
+                        ))
+
+                    ) : ("")
+                }
+
             </div>
         </div>
         <div className="form-section">
